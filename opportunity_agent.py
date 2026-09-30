@@ -50,7 +50,7 @@ Nunca utilize fraude, invasão, manipulação, falsificação ou qualquer ativid
 def analisar_oportunidade(missao):
 
     resposta = client.responses.create(
-        model="gpt-5.6-mini",
+        model="gpt-5.6-luna",
         instructions=OPPORTUNITY_SYSTEM,
         input=missao
     )
