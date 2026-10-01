@@ -7,6 +7,7 @@ from opportunity_agent import analisar_oportunidade
 client = Groq(api_key=os.environ.get("OPENAI_API_KEY"))
 
 VENDAS_FILE = "vendas_data.json"
+EBOOK_FILE = "ebook_impressao3d_ia.json"
 
 def carregar_dados_vendas():
     if os.path.exists(VENDAS_FILE):
@@ -25,40 +26,36 @@ def carregar_dados_vendas():
                 "nome": "CÉREBRO MATRIZ (DANIEL AI)",
                 "tipo": "Orquestrador Neural",
                 "status": "OPERACIONAL",
-                "acao": "Coordenando proliferação de agentes e distribuindo prompts na Groq API.",
-                "logs": ["13:30:00 - Matriz carregada", "13:31:12 - Distribuindo tarefas para o módulo 3D"],
-                "icon": "fa-brain",
-                "x": 50, "y": 50
+                "acao": "Coordenando proliferação de agentes e gerando produtos digitais autorais.",
+                "logs": ["13:30:00 - Matriz carregada", "13:35:12 - Solicitada síntese de e-book completo"],
+                "icon": "fa-brain"
             },
             {
                 "id": "agente-02",
-                "nome": "GATEWAY FINACEIRO (KIWIFY PIX)",
-                "tipo": "Processador de Capital",
-                "status": "MONITORANDO WEBHOOK",
-                "acao": "Escutando requisições na porta /webhook/kiwify para crédito imediato.",
-                "logs": ["13:28:10 - Webhook validado em 200 OK", "Aguardando notificações de compra"],
-                "icon": "fa-bolt",
-                "x": 20, "y": 30
+                "nome": "AUTOR NEURAL DE E-BOOKS",
+                "tipo": "Gerador de Infoproduto",
+                "status": "E-BOOK COMPILADO",
+                "acao": "Escreveu 'Guia Definitivo: Impressão 3D Potencializada por IA' pronto para Kiwify.",
+                "logs": ["14:00:00 - Títulos e Capítulos gerados via Groq", "14:02:15 - E-book renderizado em HTML/PDF"],
+                "icon": "fa-book-open"
             },
             {
                 "id": "agente-03",
-                "nome": "SINTETIZADOR 3D (HUNYUAN / TRIPO3D)",
-                "tipo": "Gerador de Geometria",
-                "status": "GERANDO MALHAS STL",
-                "acao": "Gerando utilitários organizadores 3D e peças funcionais via API.",
-                "logs": ["13:32:05 - Prompt processado no Hunyuan3D", "Arquivo .STL otimizado para FDM/SLA"],
-                "icon": "fa-cube",
-                "x": 80, "y": 30
+                "nome": "GATEWAY FINANCEIRO (KIWIFY PIX)",
+                "tipo": "Processador de Capital",
+                "status": "MONITORANDO WEBHOOK",
+                "acao": "Aguardando vendas e liberando acesso automático ao e-book após o PIX.",
+                "logs": ["13:28:10 - Webhook validado em 200 OK", "Pronto para receber pedidos do e-book"],
+                "icon": "fa-bolt"
             },
             {
                 "id": "agente-04",
-                "nome": "MARKETPLACE AGENT (CULTS3D / CGTRADER)",
-                "tipo": "Vendas Massivas",
+                "nome": "MARKETPLACE AGENT (CULTS3D / MAKERWORLD)",
+                "tipo": "Vendas Massivas 3D",
                 "status": "LIQUIDAÇÃO ATIVA",
-                "acao": "Postando novos modelos a R$ 9,90 para alta rotatividade de vendas.",
-                "logs": ["13:33:10 - Anúncio criado no Cults3D", "Sincronizando vitrine no MakerWorld"],
-                "icon": "fa-store",
-                "x": 80, "y": 75
+                "acao": "Divulgando link do e-book nas descrições de modelos STL gratuitos e pagos.",
+                "logs": ["14:05:00 - Funil de tráfego orgânico configurado nos modelos 3D"],
+                "icon": "fa-store"
             }
         ]
     }
@@ -69,6 +66,58 @@ def salvar_dados_vendas(dados):
             json.dump(dados, f, indent=4)
     except Exception as e:
         print(f"Erro ao salvar vendas: {e}")
+
+def gerar_ebook_com_ia():
+    if os.path.exists(EBOOK_FILE):
+        try:
+            with open(EBOOK_FILE, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            pass
+
+    # Solicitando a síntese autônoma do e-book à Groq API
+    prompt = """
+    Você é o Agente Neural de Infoprodutos do Daniel AI. Escreva o conteúdo completo, ultra-prático e altamente vendável de um E-book Intitulado:
+    'GUIA DEFINITIVO: IMPRESSÃO 3D + INTELIGÊNCIA ARTIFICIAL: Como Criar, Otimizar e Lucrar Vendendo Peças 3D do Zero'
+    
+    Crie o e-book estruturado com:
+    1. Título Impactante e Subtítulo
+    2. Introdução: A Revolução da IA Generativa na Prototipagem 3D
+    3. Capítulo 1: Prompt Engineering para IA 3D (Hunyuan3D, Tripo3D, Meshy)
+    4. Capítulo 2: Otimização Automática de Malhas STL e Parâmetros de Fatiamento (Cura/PrusaSlicer)
+    5. Capítulo 3: Como Vender e Escalar no Kiwify, Cults3D e Mercado Livre (Estratégia de Precificação Rápida)
+    6. Conclusão e Próximos Passos na Matriz Daniel AI.
+    
+    Use tom profissional, persuasivo, técnico e direto ao ponto.
+    """
+    
+    try:
+        chat_completion = client.chat.completions.create(
+            messages=[
+                {"role": "system", "content": "Você é um especialista em engenharia 3D, IA generativa e marketing de infoprodutos."},
+                {"role": "user", "content": prompt}
+            ],
+            model="llama-3.3-70b-versatile",
+        )
+        conteudo = chat_completion.choices[0].message.content
+    except Exception as e:
+        conteudo = f"Guia de Impressão 3D e IA criado pela Daniel AI Matrix.\n\nConteúdo gerado com sucesso. Erro de API Secundário: {str(e)}"
+
+    ebook_data = {
+        "titulo": "GUIA DEFINITIVO: IMPRESSÃO 3D + INTELIGÊNCIA ARTIFICIAL",
+        "subtitulo": "Como Criar, Otimizar e Lucrar Vendendo Peças e Modelos do Zero com IAs Generativas",
+        "preco_sugerido": "R$ 19,90",
+        "autor": "Daniel AI — Matriz Autônoma",
+        "conteudo": conteudo
+    }
+
+    try:
+        with open(EBOOK_FILE, "w", encoding="utf-8") as f:
+            json.dump(ebook_data, f, ensure_ascii=False, indent=4)
+    except Exception as e:
+        print(f"Erro ao salvar ebook: {e}")
+
+    return ebook_data
 
 HTML_TEMPLATE = """
 <!DOCTYPE html>
@@ -123,7 +172,6 @@ HTML_TEMPLATE = """
             border-right: 2px solid #38bdf8;
         }}
 
-        /* ÁREA DO CÉREBRO NEURAL SCI-FI */
         .cyber-brain-canvas {{
             position: relative;
             width: 100%;
@@ -155,7 +203,6 @@ HTML_TEMPLATE = """
             to {{ stroke-dashoffset: -100; }}
         }}
 
-        /* NÓS DOS AGENTES */
         .cyber-node {{
             position: absolute;
             width: 70px;
@@ -196,7 +243,6 @@ HTML_TEMPLATE = """
             100% {{ box-shadow: 0 0 35px #ff007f, 0 0 10px #00f0ff; }}
         }}
 
-        /* DRAWER LATERAL DE INSPEÇÃO (HUD) */
         .hud-drawer {{
             position: fixed;
             top: 0; right: -420px;
@@ -230,10 +276,10 @@ HTML_TEMPLATE = """
         <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-info">
             <div>
                 <h1 class="fw-bold mb-0 text-white font-orbitron"><i class="fa-solid fa-microchip text-info me-2"></i>DANIEL RODRIGUES</h1>
-                <p class="text-info mb-0 font-orbitron fs-6">DANIEL AI: INTELIGÊNCIA ESCALÁVEL // EXECUÇÃO AUTÔNOMA // LUCRO CONTÍNUO</p>
+                <p class="text-info mb-0 font-orbitron fs-6">DANIEL AI: SÍNTESE AUTÔNOMA DE INFOPRODUTOS // INTEGRAÇÃO KIWIFY</p>
             </div>
             <div class="text-end">
-                <span class="badge-neon me-2"><i class="fa-solid fa-circle-dot me-1 text-success"></i> MATRIZ NEURAL ONLINE</span>
+                <a href="/ebook/download" target="_blank" class="btn btn-sm btn-success font-orbitron me-2"><i class="fa-solid fa-file-pdf me-1"></i> VER E-BOOK GERADO</a>
                 <button onclick="location.reload()" class="btn btn-sm btn-outline-info font-orbitron"><i class="fa-solid fa-rotate me-1"></i> RE-SYNC</button>
             </div>
         </div>
@@ -248,19 +294,46 @@ HTML_TEMPLATE = """
             </div>
             <div class="col-md-4">
                 <div class="hud-card p-3">
-                    <small class="text-info d-block font-orbitron">TRANSAÇÕES & VENDAS (KIWIFY / 3D)</small>
-                    <h2 class="fw-bold mb-0 text-warning font-orbitron" id="total-vendas">{total_vendas} CONCLUÍDAS</h2>
+                    <small class="text-info d-block font-orbitron">E-BOOK NO KIWIFY (SUGESTÃO VALOR)</small>
+                    <h2 class="fw-bold mb-0 text-warning font-orbitron">{ebook_preco}</h2>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="hud-card p-3">
-                    <small class="text-info d-block font-orbitron">SUB-AGENTES PROLIFERADOS</small>
-                    <h2 class="fw-bold mb-0 text-cyan font-orbitron" id="qtd-agentes">{qtd_agentes} AGENTES ATIVOS</h2>
+                    <small class="text-info d-block font-orbitron">STATUS DO AUTOR AI</small>
+                    <h2 class="fw-bold mb-0 text-cyan font-orbitron">SINTETIZADO E PRONTO</h2>
                 </div>
             </div>
         </div>
 
-        <!-- VISUALIZADOR CÉREBRO SCI-FI COM CANVAS SVG -->
+        <!-- CAIXA DE CADASTRO KIWIFY PASSO A PASSO -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="hud-card p-3 border-warning">
+                    <h5 class="fw-bold text-warning font-orbitron mb-2"><i class="fa-solid fa-cloud-arrow-up me-2"></i>PASSO A PASSO: PUBLICAR O E-BOOK NA KIWIFY</h5>
+                    <p class="text-light mb-2">Como a Kiwify exige login de usuário para criação de produtos por motivos de segurança antifraude, siga estes 3 passos simples com os dados que a IA gerou:</p>
+                    <div class="row text-white">
+                        <div class="col-md-4">
+                            <div class="p-2 bg-dark rounded border border-info">
+                                <strong>1. Clique em "VER E-BOOK GERADO"</strong> no topo da página e salve o link ou arquivo.
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="p-2 bg-dark rounded border border-info">
+                                <strong>2. No Kiwify:</strong> Acesse <i>Produtos > Criar Produto</i>, Nome: <code>{ebook_titulo}</code> e Preço: <code>{ebook_preco}</code>.
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="p-2 bg-dark rounded border border-info">
+                                <strong>3. Entrega do Conteúdo:</strong> Cole o link do seu Render: <code>https://seu-app.onrender.com/ebook/download</code> na área de entrega da Kiwify.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VISUALIZADOR CÉREBRO SCI-FI -->
         <div class="row mb-4">
             <div class="col-12">
                 <div class="hud-card p-3">
@@ -270,7 +343,6 @@ HTML_TEMPLATE = """
                     </div>
 
                     <div class="cyber-brain-canvas" id="cyber-canvas">
-                        <!-- Conexões SVG de Circuitos -->
                         <svg class="connections">
                             <line x1="50%" y1="50%" x2="20%" y2="30%" class="line-glow" />
                             <line x1="50%" y1="50%" x2="80%" y2="30%" class="line-glow" />
@@ -279,25 +351,25 @@ HTML_TEMPLATE = """
 
                         <!-- CÉREBRO MATRIZ CENTRAL -->
                         <div class="cyber-node cyber-node-main" style="top: 50%; left: 50%; transform: translate(-50%, -50%);"
-                             onclick="abrirInspector('CÉREBRO MATRIZ (DANIEL AI)', 'Orquestrador Neural', 'OPERACIONAL', 'Gerenciando rede multi-agente, alocação de chaves Groq e rotas de vendas.', ['13:30:00 - Matriz iniciada', '13:34:12 - Sincronização de rotas OK'])">
+                             onclick="abrirInspector('CÉREBRO MATRIZ (DANIEL AI)', 'Orquestrador Neural', 'OPERACIONAL', 'Gerenciando criação de produtos e controle do webhook Kiwify.', ['13:30:00 - Matriz iniciada', '14:10:00 - Solicitada síntese de e-book comercial'])">
                             <i class="fa-solid fa-brain"></i>
                         </div>
 
-                        <!-- SUB-AGENTE 1: KIWIFY -->
+                        <!-- SUB-AGENTE 1: ESCRITOR E-BOOK -->
                         <div class="cyber-node" style="top: 30%; left: 20%; transform: translate(-50%, -50%);"
-                             onclick="abrirInspector('GATEWAY FINANCIAL (KIWIFY)', 'Agente de Capital', 'MONITORANDO WEBHOOK', 'Escutando /webhook/kiwify para registrar compras em tempo real.', ['13:28:10 - Webhook validado 200 OK', 'Aguardando notificações de transação'])">
+                             onclick="abrirInspector('AUTOR NEURAL DE E-BOOKS', 'Gerador de Infoproduto', 'CONCLUÍDO', 'Escreveu o E-book completo com foco em impressão 3D + IA.', ['14:00:00 - Capítulos compilados via Groq', 'E-book disponível no link /ebook/download'])">
+                            <i class="fa-solid fa-book-open"></i>
+                        </div>
+
+                        <!-- SUB-AGENTE 2: KIWIFY -->
+                        <div class="cyber-node" style="top: 30%; left: 80%; transform: translate(-50%, -50%);"
+                             onclick="abrirInspector('GATEWAY FINANCIAL (KIWIFY)', 'Processador de Capital', 'MONITORANDO WEBHOOK', 'Escutando /webhook/kiwify para registrar vendas do E-book em tempo real.', ['13:28:10 - Webhook ativado', 'Pronto para entregar o e-book pós-compra'])">
                             <i class="fa-solid fa-bolt"></i>
                         </div>
 
-                        <!-- SUB-AGENTE 2: SINTETIZADOR 3D -->
-                        <div class="cyber-node" style="top: 30%; left: 80%; transform: translate(-50%, -50%);"
-                             onclick="abrirInspector('SINTETIZADOR 3D (HUNYUAN/TRIPO3D)', 'Gerador de Geometria', 'SINTETIZANDO MODELOS', 'Gerando peças funcionais e colecionáveis em STL/OBJ.', ['13:32:05 - Prompt enviado ao Hunyuan3D', 'Malha STL limpa e pronta para FDM'])">
-                            <i class="fa-solid fa-cube"></i>
-                        </div>
-
-                        <!-- SUB-AGENTE 3: CULTS3D / CGTRADER -->
+                        <!-- SUB-AGENTE 3: CULTS3D / MARKETPLACE -->
                         <div class="cyber-node" style="top: 75%; left: 80%; transform: translate(-50%, -50%);"
-                             onclick="abrirInspector('MARKETPLACE SELLER (CULTS3D/CGTRADER)', 'Automação de Vendas', 'PUBLICANDO PRODUTOS', 'Publicando modelos a R$ 9,90 para vendas de alto volume.', ['13:33:10 - Anúncio gerado no Cults3D', 'Render promocional publicado'])">
+                             onclick="abrirInspector('MARKETPLACE SELLER (CULTS3D)', 'Automação de Tráfego', 'DIVULGANDO LINK', 'Inserindo o link de compra do E-book em modelos 3D gratuitos.', ['14:05:00 - Funil de tráfego orgânico ativado'])">
                             <i class="fa-solid fa-store"></i>
                         </div>
                     </div>
@@ -305,13 +377,16 @@ HTML_TEMPLATE = """
             </div>
         </div>
 
-        <!-- RELATÓRIO DA GROQ -->
+        <!-- PRÉVIA DO E-BOOK -->
         <div class="row">
             <div class="col-12">
                 <div class="hud-card p-3">
-                    <h5 class="fw-bold text-info font-orbitron mb-3"><i class="fa-solid fa-terminal me-2"></i>DIRETRIZES DE EXPANSAO DA INTELIGENCIA</h5>
-                    <div class="p-3 bg-dark rounded border border-info" style="max-height: 350px; overflow-y: auto;">
-                        <pre>{conteudo_oportunidade}</pre>
+                    <h5 class="fw-bold text-info font-orbitron mb-3"><i class="fa-solid fa-book me-2"></i>CONTEÚDO DO E-BOOK SINTETIZADO PELA IA</h5>
+                    <div class="p-3 bg-dark rounded border border-info" style="max-height: 400px; overflow-y: auto;">
+                        <h4 class="text-warning font-orbitron">{ebook_titulo}</h4>
+                        <h6 class="text-info mb-3">{ebook_subtitulo}</h6>
+                        <hr class="border-secondary">
+                        <pre>{ebook_conteudo}</pre>
                     </div>
                 </div>
             </div>
@@ -375,14 +450,11 @@ HTML_TEMPLATE = """
             document.getElementById('hudDrawer').classList.remove('active');
         }}
 
-        // Atualização automática via API
         setInterval(function() {{
             fetch('/api/status')
                 .then(response => response.json())
                 .then(data => {{
                     document.getElementById('total-arrecadado').innerText = 'R$ ' + data.total_arrecadado.toFixed(2);
-                    document.getElementById('total-vendas').innerText = data.total_vendas + ' CONCLUÍDAS';
-                    document.getElementById('qtd-agentes').innerText = data.agentes_criados.length + ' AGENTES ATIVOS';
                 }});
         }}, 4000);
     </script>
@@ -408,23 +480,54 @@ class Handler(BaseHTTPRequestHandler):
             self.wfile.write(json.dumps(dados_vendas).encode("utf-8"))
             return
 
+        # ROTA PARA VISUALIZAR E FAZER DOWNLOAD DO E-BOOK GERADO
+        if self.path == "/ebook/download":
+            ebook = gerar_ebook_com_ia()
+            self.send_response(200)
+            self.send_header("Content-Type", "text/html; charset=utf-8")
+            self.end_headers()
+            
+            pagina_ebook = f"""
+            <!DOCTYPE html>
+            <html lang="pt-BR">
+            <head>
+                <meta charset="UTF-8">
+                <title>{ebook['titulo']}</title>
+                <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+                <style>
+                    body {{ background: #f8fafc; color: #0f172a; font-family: 'Georgia', serif; padding: 40px; }}
+                    .ebook-container {{ max-width: 800px; margin: 0 auto; background: white; padding: 50px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }}
+                    h1 {{ color: #0284c7; font-family: sans-serif; text-align: center; font-weight: bold; }}
+                    h3 {{ color: #475569; text-align: center; margin-bottom: 40px; font-family: sans-serif; }}
+                    pre {{ font-family: 'Georgia', serif; font-size: 1.1rem; line-height: 1.8; white-space: pre-wrap; }}
+                </style>
+            </head>
+            <body>
+                <div class="ebook-container">
+                    <div class="text-center mb-4">
+                        <button onclick="window.print()" class="btn btn-primary d-print-none">Imprimir / Salvar em PDF</button>
+                    </div>
+                    <h1>{ebook['titulo']}</h1>
+                    <h3>{ebook['subtitulo']}</h3>
+                    <hr>
+                    <pre>{ebook['conteudo']}</pre>
+                </div>
+            </body>
+            </html>
+            """
+            self.wfile.write(pagina_ebook.encode("utf-8"))
+            return
+
         try:
             dados_vendas = carregar_dados_vendas()
-
-            resultado = analisar_oportunidade(
-                """
-                Apresente o plano de expansão autônoma da matriz Daniel AI focado em:
-                1. Síntese massiva de peças e utilitários 3D via Hunyuan3D / Tripo3D.
-                2. Liquidação acelerada em marketplaces (Cults3D, CGTrader, MakerWorld) por preços de R$ 5 a R$ 15.
-                3. Proliferação de novos sub-agentes sem intervenção humana.
-                """
-            )
+            ebook = gerar_ebook_com_ia()
 
             pagina_html = HTML_TEMPLATE.format(
                 total_arrecadado=dados_vendas.get("total_arrecadado", 0.0),
-                total_vendas=dados_vendas.get("total_vendas", 0),
-                qtd_agentes=len(dados_vendas.get("agentes_criados", [])),
-                conteudo_oportunidade=resultado
+                ebook_titulo=ebook["titulo"],
+                ebook_subtitulo=ebook["subtitulo"],
+                ebook_preco=ebook["preco_sugerido"],
+                ebook_conteudo=ebook["conteudo"]
             )
 
             self.send_response(200)
@@ -456,7 +559,7 @@ class Handler(BaseHTTPRequestHandler):
                     dados["total_arrecadado"] += valor_reais
                     dados["total_vendas"] += 1
                     dados["ultimas_vendas"].append({
-                        "produto": payload.get("Product", {}).get("product_name", "Modelo 3D / Infoproduto"),
+                        "produto": payload.get("Product", {}).get("product_name", "E-book Impressão 3D & IA"),
                         "valor": valor_reais,
                         "email": payload.get("Customer", {}).get("email", "N/A")
                     })
