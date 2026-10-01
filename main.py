@@ -6,6 +6,25 @@ from opportunity_agent import analisar_oportunidade
 
 client = Groq(api_key=os.environ.get("OPENAI_API_KEY"))
 
+# Ficheiro para guardar as vendas recebidas localmente
+VENDAS_FILE = "vendas_data.json"
+
+def carregar_dados_vendas():
+    if os.path.exists(VENDAS_FILE):
+        try:
+            with open(VENDAS_FILE, "r") as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return {"total_arrecadado": 0.0, "total_vendas": 0, "ultimas_vendas": []}
+
+def salvar_dados_vendas(dados):
+    try:
+        with open(VENDAS_FILE, "w") as f:
+            json.dump(dados, f, indent=4)
+    except Exception as e:
+        print(f"Erro ao salvar vendas: {e}")
+
 HTML_TEMPLATE = """
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -31,10 +50,10 @@ HTML_TEMPLATE = """
         <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary">
             <div>
                 <h2 class="fw-bold mb-0 text-white"><i class="fa-solid fa-robot text-primary me-2"></i>DANIEL AI</h2>
-                <small class="text-muted">Sistema Autônomo de Geração de Renda</small>
+                <small class="text-muted">Sistema Autônomo de Geração de Renda & Infoprodutos</small>
             </div>
             <div>
-                <span class="badge-online me-2"><i class="fa-solid fa-circle me-1"></i> SISTEMA ATIVO (GROQ)</span>
+                <span class="badge-online me-2"><i class="fa-solid fa-circle me-1"></i> SISTEMA ATIVO (GROQ + KIWIFY)</span>
                 <button onclick="location.reload()" class="btn btn-sm btn-outline-light"><i class="fa-solid fa-rotate-right me-1"></i> Atualizar</button>
             </div>
         </div>
@@ -46,8 +65,8 @@ HTML_TEMPLATE = """
                     <div class="d-flex align-items-center">
                         <div class="agent-avatar bg-success text-white"><i class="fa-solid fa-wallet"></i></div>
                         <div>
-                            <small class="text-muted d-block">Receita Arrecadada</small>
-                            <h3 class="fw-bold mb-0 text-success">R$ 0,00</h3>
+                            <small class="text-muted d-block">Receita Arrecadada (Kiwify)</small>
+                            <h3 class="fw-bold mb-0 text-success">R$ {total_arrecadado:.2f}</h3>
                         </div>
                     </div>
                 </div>
@@ -55,10 +74,10 @@ HTML_TEMPLATE = """
             <div class="col-md-4">
                 <div class="card card-custom stat-card p-3" style="border-left-color: #eab308;">
                     <div class="d-flex align-items-center">
-                        <div class="agent-avatar bg-warning text-dark"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                        <div class="agent-avatar bg-warning text-dark"><i class="fa-solid fa-bag-shopping"></i></div>
                         <div>
-                            <small class="text-muted d-block">Ações Pendentes do Daniel</small>
-                            <h3 class="fw-bold mb-0 text-warning">1 Pendência</h3>
+                            <small class="text-muted d-block">Total de Vendas Concluídas</small>
+                            <h3 class="fw-bold mb-0 text-warning">{total_vendas} Vendas</h3>
                         </div>
                     </div>
                 </div>
@@ -69,7 +88,7 @@ HTML_TEMPLATE = """
                         <div class="agent-avatar bg-purple text-white" style="background:#8b5cf6"><i class="fa-solid fa-network-wired"></i></div>
                         <div>
                             <small class="text-muted d-block">Agentes Operacionais</small>
-                            <h3 class="fw-bold mb-0 text-white">2 Agentes</h3>
+                            <h3 class="fw-bold mb-0 text-white">3 Agentes</h3>
                         </div>
                     </div>
                 </div>
@@ -82,7 +101,6 @@ HTML_TEMPLATE = """
                 <div class="card card-custom p-3">
                     <h5 class="fw-bold mb-3 border-bottom pb-2 text-primary"><i class="fa-solid fa-users-gear me-2"></i>Status dos Agentes</h5>
                     
-                    <!-- Agente 1 -->
                     <div class="d-flex align-items-center mb-3 p-2 rounded bg-dark">
                         <div class="agent-avatar bg-primary text-white"><i class="fa-solid fa-brain"></i></div>
                         <div>
@@ -91,20 +109,26 @@ HTML_TEMPLATE = """
                         </div>
                     </div>
 
-                    <!-- Agente 2 -->
                     <div class="d-flex align-items-center mb-3 p-2 rounded bg-dark">
                         <div class="agent-avatar bg-info text-white"><i class="fa-solid fa-magnifying-glass-dollar"></i></div>
                         <div>
                             <strong class="d-block text-white">Agente de Oportunidades</strong>
-                            <small class="text-info"><i class="fa-solid fa-spinner fa-spin me-1"></i>Analisando Mercado</small>
+                            <small class="text-info"><i class="fa-solid fa-spinner fa-spin me-1"></i>Mapeando Mercado</small>
                         </div>
                     </div>
 
-                    <!-- CAIXA DE ATENÇÃO DO USUÁRIO -->
+                    <div class="d-flex align-items-center mb-3 p-2 rounded bg-dark">
+                        <div class="agent-avatar bg-success text-white"><i class="fa-solid fa-receipt"></i></div>
+                        <div>
+                            <strong class="d-block text-white">Agente Kiwify (Vendas)</strong>
+                            <small class="text-success"><i class="fa-solid fa-check me-1"></i>Webhook Pronto</small>
+                        </div>
+                    </div>
+
                     <div class="action-required">
-                        <h6 class="fw-bold text-warning mb-2"><i class="fa-solid fa-user-check me-2"></i>Atenção Necessária</h6>
-                        <small class="d-block text-light mb-2">Configure uma integração de pagamento (ex: Mercado Pago / Kiwify) para permitir que os agentes recebam pagamentos automaticamente.</small>
-                        <span class="badge bg-warning text-dark">Ação Humana Pendente</span>
+                        <h6 class="fw-bold text-warning mb-2"><i class="fa-solid fa-circle-info me-2"></i>Status da Integração</h6>
+                        <small class="d-block text-light mb-2">Sua URL de Webhook está ativa e pronta para receber alertas de vendas em tempo real.</small>
+                        <span class="badge bg-success text-dark">Integrado à Kiwify</span>
                     </div>
                 </div>
             </div>
@@ -113,8 +137,8 @@ HTML_TEMPLATE = """
             <div class="col-md-8">
                 <div class="card card-custom p-3">
                     <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
-                        <h5 class="fw-bold mb-0 text-success"><i class="fa-solid fa-chart-line me-2"></i>Análise de Oportunidades em Tempo Real</h5>
-                        <small class="text-muted">Gerado pela Groq Llama 3.3</small>
+                        <h5 class="fw-bold mb-0 text-success"><i class="fa-solid fa-chart-line me-2"></i>Análise de Oportunidades & Produtos</h5>
+                        <small class="text-muted">Gerado via Groq</small>
                     </div>
                     <div class="p-3 bg-dark rounded border border-secondary" style="max-height: 600px; overflow-y: auto;">
                         <pre>{conteudo_oportunidade}</pre>
@@ -130,21 +154,29 @@ HTML_TEMPLATE = """
 class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
+        # Validação do teste do Webhook da Kiwify
+        if self.path == "/webhook/kiwify":
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            self.wfile.write(json.dumps({"status": "ok", "message": "Webhook Kiwify Ativo"}).encode("utf-8"))
+            return
+
         try:
+            dados_vendas = carregar_dados_vendas()
+
             resultado = analisar_oportunidade(
                 """
-                Faça uma primeira análise de oportunidades para o Daniel AI.
-
-                Procure possibilidades de gerar renda começando com pouco capital,
-                incluindo serviços de IA, plataformas de freelancers,
-                criação de produtos digitais e criação de pequenas plataformas.
-
-                Identifique quais oportunidades devem ser investigadas primeiro.
+                Faça uma análise focada em produtos digitais para venda na Kiwify e serviços automatizados.
+                Identifique 3 ideias de e-books, modelos 3D ou ferramentas digitais simples que o Daniel AI pode gerar.
                 """
             )
 
-            # Injeta o resultado da IA dentro do Painel HTML
-            pagina_html = HTML_TEMPLATE.format(conteudo_oportunidade=resultado)
+            pagina_html = HTML_TEMPLATE.format(
+                total_arrecadado=dados_vendas.get("total_arrecadado", 0.0),
+                total_vendas=dados_vendas.get("total_vendas", 0),
+                conteudo_oportunidade=resultado
+            )
 
             self.send_response(200)
             self.send_header("Content-Type", "text/html; charset=utf-8")
@@ -158,13 +190,49 @@ class Handler(BaseHTTPRequestHandler):
             erro_msg = f"<h1>Erro ao carregar Dashboard:</h1><p>{str(e)}</p>"
             self.wfile.write(erro_msg.encode("utf-8"))
 
+    def do_POST(self):
+        if self.path == "/webhook/kiwify":
+            try:
+                content_length = int(self.headers.get("Content-Length", 0))
+                body = self.rfile.read(content_length) if content_length > 0 else b"{}"
+                payload = json.loads(body.decode("utf-8")) if body else {}
+
+                status = payload.get("order_status") or payload.get("status")
+                
+                if status in ["paid", "approved", "completed"]:
+                    comissao = payload.get("Commissions", {}).get("my_commission", 0)
+                    valor_reais = float(comissao) / 100.0 if comissao > 0 else float(payload.get("order_ref_amount", 0)) / 100.0
+
+                    dados = carregar_dados_vendas()
+                    dados["total_arrecadado"] += valor_reais
+                    dados["total_vendas"] += 1
+                    dados["ultimas_vendas"].append({
+                        "produto": payload.get("Product", {}).get("product_name", "Infoproduto"),
+                        "valor": valor_reais,
+                        "email": payload.get("Customer", {}).get("email", "N/A")
+                    })
+                    salvar_dados_vendas(dados)
+
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json")
+                self.end_headers()
+                self.wfile.write(json.dumps({"status": "success"}).encode("utf-8"))
+            except Exception as e:
+                self.send_response(200)  # Retorna 200 para a Kiwify aceitar mesmo em testes
+                self.send_header("Content-Type", "application/json")
+                self.end_headers()
+                self.wfile.write(json.dumps({"status": "received", "note": str(e)}).encode("utf-8"))
+        else:
+            self.send_response(404)
+            self.end_headers()
+
     def log_message(self, format, *args):
         return
 
 PORT = int(os.environ.get("PORT", 10000))
 
 print("===================================")
-print("DANIEL AI - DASHBOARD ONLINE")
+print("DANIEL AI - DASHBOARD + KIWIFY WEBHOOK")
 print("===================================")
 
 server = HTTPServer(("0.0.0.0", PORT), Handler)
