@@ -49,7 +49,7 @@ Nunca utilize fraude, invasão, manipulação, falsificação ou qualquer ativid
 
 def analisar_oportunidade(missao):
     resposta = client.chat.completions.create(
-        model="llama-3.1-8b-instant",  # <--- Alterado aqui
+        model="openai/gpt-oss-20b",  # <--- ID atualizado
         messages=[
             {"role": "system", "content": OPPORTUNITY_SYSTEM},
             {"role": "user", "content": missao}
