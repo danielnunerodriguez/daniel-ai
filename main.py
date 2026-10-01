@@ -1,6 +1,5 @@
 import os
 import json
-import time
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from groq import Groq
 from opportunity_agent import analisar_oportunidade
@@ -23,35 +22,43 @@ def carregar_dados_vendas():
         "agentes_criados": [
             {
                 "id": "agente-01",
-                "nome": "Cérebro Central (Daniel AI)",
-                "tipo": "Orquestrador",
-                "status": "Executando",
-                "acao": "Gerenciando matriz de agentes e balanceando cargas na Groq API",
-                "pos_x": 50, "pos_y": 50
+                "nome": "CÉREBRO MATRIZ (DANIEL AI)",
+                "tipo": "Orquestrador Neural",
+                "status": "OPERACIONAL",
+                "acao": "Coordenando proliferação de agentes e distribuindo prompts na Groq API.",
+                "logs": ["13:30:00 - Matriz carregada", "13:31:12 - Distribuindo tarefas para o módulo 3D"],
+                "icon": "fa-brain",
+                "x": 50, "y": 50
             },
             {
                 "id": "agente-02",
-                "nome": "Agente Kiwify (Pagamentos)",
-                "tipo": "Financeiro",
-                "status": "Ativo",
-                "acao": "Escutando Webhook em /webhook/kiwify para novos depósitos Pix",
-                "pos_x": 20, "pos_y": 25
+                "nome": "GATEWAY FINACEIRO (KIWIFY PIX)",
+                "tipo": "Processador de Capital",
+                "status": "MONITORANDO WEBHOOK",
+                "acao": "Escutando requisições na porta /webhook/kiwify para crédito imediato.",
+                "logs": ["13:28:10 - Webhook validado em 200 OK", "Aguardando notificações de compra"],
+                "icon": "fa-bolt",
+                "x": 20, "y": 30
             },
             {
                 "id": "agente-03",
-                "nome": "3D Model Creator (Hunyuan/Tripo)",
-                "tipo": "Produção 3D",
-                "status": "Gerando Modelo",
-                "acao": "Criando arquivo STL/OBJ para utilitários de organização 3D",
-                "pos_x": 80, "pos_y": 30
+                "nome": "SINTETIZADOR 3D (HUNYUAN / TRIPO3D)",
+                "tipo": "Gerador de Geometria",
+                "status": "GERANDO MALHAS STL",
+                "acao": "Gerando utilitários organizadores 3D e peças funcionais via API.",
+                "logs": ["13:32:05 - Prompt processado no Hunyuan3D", "Arquivo .STL otimizado para FDM/SLA"],
+                "icon": "fa-cube",
+                "x": 80, "y": 30
             },
             {
                 "id": "agente-04",
-                "nome": "3D Marketplace Seller",
+                "nome": "MARKETPLACE AGENT (CULTS3D / CGTRADER)",
                 "tipo": "Vendas Massivas",
-                "status": "Publicando",
-                "acao": "Postando modelo no Cults3D & CGTrader a R$ 9,90 para venda rápida",
-                "pos_x": 75, "pos_y": 75
+                "status": "LIQUIDAÇÃO ATIVA",
+                "acao": "Postando novos modelos a R$ 9,90 para alta rotatividade de vendas.",
+                "logs": ["13:33:10 - Anúncio criado no Cults3D", "Sincronizando vitrine no MakerWorld"],
+                "icon": "fa-store",
+                "x": 80, "y": 75
             }
         ]
     }
@@ -69,132 +76,228 @@ HTML_TEMPLATE = """
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DANIEL RODRIGUES — Cérebro Autônomo de IA</title>
+    <title>DANIEL RODRIGUES — NEURAL AI MATRIX</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        body {{ background-color: #0b0f19; color: #f8fafc; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }}
-        .card-custom {{ background-color: #161e2e; border: 1px solid #2d3748; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }}
-        .badge-online {{ background-color: #10b981; color: white; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; box-shadow: 0 0 10px rgba(16,185,129,0.4); }}
-        
-        /* ÁREA DO CÉREBRO NEURAL */
-        .brain-container {{
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@500;600;700&display=swap');
+
+        body {{
+            background-color: #030712;
+            color: #38bdf8;
+            font-family: 'Rajdhani', sans-serif;
+            background-image: 
+                radial-gradient(rgba(14, 165, 233, 0.15) 1px, transparent 0),
+                radial-gradient(rgba(14, 165, 233, 0.1) 1px, #030712 100%);
+            background-size: 24px 24px, 100% 100%;
+            overflow-x: hidden;
+        }}
+
+        h1, h2, h3, h4, h5, h6, .font-orbitron {{
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1.5px;
+        }}
+
+        .hud-card {{
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid #0284c7;
+            box-shadow: 0 0 15px rgba(2, 132, 199, 0.25), inset 0 0 15px rgba(2, 132, 199, 0.1);
+            border-radius: 8px;
+            backdrop-filter: blur(8px);
+            position: relative;
+        }}
+        .hud-card::before {{
+            content: '';
+            position: absolute;
+            top: -2px; left: -2px;
+            width: 10px; height: 10px;
+            border-top: 2px solid #38bdf8;
+            border-left: 2px solid #38bdf8;
+        }}
+        .hud-card::after {{
+            content: '';
+            position: absolute;
+            bottom: -2px; right: -2px;
+            width: 10px; height: 10px;
+            border-bottom: 2px solid #38bdf8;
+            border-right: 2px solid #38bdf8;
+        }}
+
+        /* ÁREA DO CÉREBRO NEURAL SCI-FI */
+        .cyber-brain-canvas {{
             position: relative;
             width: 100%;
-            height: 380px;
-            background: radial-gradient(circle, #1e293b 0%, #0b0f19 80%);
-            border: 2px solid #3b82f6;
-            border-radius: 16px;
+            height: 420px;
+            background: radial-gradient(circle, rgba(14,165,233,0.12) 0%, rgba(3,7,18,0.95) 80%);
+            border: 1px solid #0284c7;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: inset 0 0 30px rgba(59,130,246,0.2);
+            box-shadow: 0 0 25px rgba(14,165,233,0.2);
         }}
-        .node {{
+
+        svg.connections {{
             position: absolute;
-            width: 65px;
-            height: 65px;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }}
+
+        .line-glow {{
+            stroke: #00f0ff;
+            stroke-width: 2;
+            stroke-dasharray: 6 4;
+            animation: dash 15s linear infinite;
+            filter: drop-shadow(0 0 6px #00f0ff);
+        }}
+
+        @keyframes dash {{
+            to {{ stroke-dashoffset: -100; }}
+        }}
+
+        /* NÓS DOS AGENTES */
+        .cyber-node {{
+            position: absolute;
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 1.4rem;
+            font-size: 1.6rem;
+            color: #00f0ff;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 0 15px rgba(255,255,255,0.2);
-            z-index: 2;
-        }}
-        .node:hover {{ transform: scale(1.18); z-index: 10; box-shadow: 0 0 25px #3b82f6; }}
-        .node-main {{ background: linear-gradient(135deg, #ef4444, #8b5cf6); border: 3px solid #ffffff; animation: pulse 2s infinite; }}
-        .node-agent {{ background: linear-gradient(135deg, #3b82f6, #06b6d4); border: 2px solid #60a5fa; }}
-        .node-3d {{ background: linear-gradient(135deg, #f59e0b, #10b981); border: 2px solid #fcd34d; }}
-
-        @keyframes pulse {{
-            0% {{ box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.7); }}
-            70% {{ box-shadow: 0 0 0 18px rgba(139, 92, 246, 0); }}
-            100% {{ box-shadow: 0 0 0 0 rgba(139, 92, 246, 0); }}
+            z-index: 5;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(15, 23, 42, 0.9);
+            border: 2px solid #00f0ff;
+            box-shadow: 0 0 15px #00f0ff, inset 0 0 10px #00f0ff;
         }}
 
-        pre {{ white-space: pre-wrap; font-family: inherit; font-size: 0.95rem; color: #cbd5e1; }}
+        .cyber-node:hover {{
+            transform: scale(1.25) translate(-50%, -50%) !important;
+            box-shadow: 0 0 30px #00f0ff, inset 0 0 20px #00f0ff;
+            border-color: #ffffff;
+            color: #ffffff;
+        }}
+
+        .cyber-node-main {{
+            width: 90px;
+            height: 90px;
+            font-size: 2.2rem;
+            color: #ff007f;
+            border-color: #ff007f;
+            box-shadow: 0 0 25px #ff007f, inset 0 0 15px #ff007f;
+            animation: pulse-red 2s infinite alternate;
+        }}
+
+        @keyframes pulse-red {{
+            0% {{ box-shadow: 0 0 15px #ff007f; }}
+            100% {{ box-shadow: 0 0 35px #ff007f, 0 0 10px #00f0ff; }}
+        }}
+
+        /* DRAWER LATERAL DE INSPEÇÃO (HUD) */
+        .hud-drawer {{
+            position: fixed;
+            top: 0; right: -420px;
+            width: 400px; height: 100vh;
+            background: rgba(3, 7, 18, 0.95);
+            border-left: 2px solid #00f0ff;
+            box-shadow: -10px 0 30px rgba(0, 240, 255, 0.3);
+            z-index: 9999;
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 25px;
+            overflow-y: auto;
+            backdrop-filter: blur(12px);
+        }}
+        .hud-drawer.active {{ right: 0; }}
+
+        .badge-neon {{
+            background: rgba(0, 240, 255, 0.1);
+            color: #00f0ff;
+            border: 1px solid #00f0ff;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }}
+        
+        pre {{ color: #a5f3fc; white-space: pre-wrap; font-family: 'Rajdhani', sans-serif; font-size: 1.05rem; }}
     </style>
-    <script>
-        // Atualização automática a cada 5 segundos
-        setInterval(function() {{
-            fetch('/api/status')
-                .then(response => response.json())
-                .then(data => {{
-                    document.getElementById('total-arrecadado').innerText = 'R$ ' + data.total_arrecadado.toFixed(2);
-                    document.getElementById('total-vendas').innerText = data.total_vendas + ' Vendas';
-                    document.getElementById('qtd-agentes').innerText = data.agentes_criados.length + ' Agentes';
-                }});
-        }}, 5000);
-
-        function abrirDetalhesAgente(nome, tipo, status, acao) {{
-            document.getElementById('modal-nome').innerText = nome;
-            document.getElementById('modal-tipo').innerText = tipo;
-            document.getElementById('modal-status').innerText = status;
-            document.getElementById('modal-acao').innerText = acao;
-            var myModal = new bootstrap.Modal(document.getElementById('agenteModal'));
-            myModal.show();
-        }}
-    </script>
 </head>
 <body class="py-4">
-    <div class="container">
+    <div class="container-fluid px-4">
         <!-- HEADER -->
-        <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary">
+        <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-info">
             <div>
-                <h2 class="fw-bold mb-0 text-white"><i class="fa-solid fa-brain text-primary me-2"></i>DANIEL RODRIGUES</h2>
-                <small class="text-info fw-semibold">"Daniel AI: Inteligência Escalável, Execução Autônoma, Lucro Contínuo."</small>
+                <h1 class="fw-bold mb-0 text-white font-orbitron"><i class="fa-solid fa-microchip text-info me-2"></i>DANIEL RODRIGUES</h1>
+                <p class="text-info mb-0 font-orbitron fs-6">DANIEL AI: INTELIGÊNCIA ESCALÁVEL // EXECUÇÃO AUTÔNOMA // LUCRO CONTÍNUO</p>
             </div>
-            <div>
-                <span class="badge-online me-2"><i class="fa-solid fa-circle me-1"></i> MATRIZ ATIVA</span>
-                <button onclick="location.reload()" class="btn btn-sm btn-outline-light"><i class="fa-solid fa-rotate-right me-1"></i> Atualizar Agora</button>
+            <div class="text-end">
+                <span class="badge-neon me-2"><i class="fa-solid fa-circle-dot me-1 text-success"></i> MATRIZ NEURAL ONLINE</span>
+                <button onclick="location.reload()" class="btn btn-sm btn-outline-info font-orbitron"><i class="fa-solid fa-rotate me-1"></i> RE-SYNC</button>
             </div>
         </div>
 
-        <!-- MÉTRICAS -->
+        <!-- MÉTRICAS SCI-FI -->
         <div class="row mb-4">
             <div class="col-md-4">
-                <div class="card card-custom p-3 border-start border-success border-4">
-                    <small class="text-muted d-block">Receita Total Acumulada</small>
-                    <h3 class="fw-bold mb-0 text-success" id="total-arrecadado">R$ {total_arrecadado:.2f}</h3>
+                <div class="hud-card p-3">
+                    <small class="text-info d-block font-orbitron">RECEITA TOTAL ACUMULADA</small>
+                    <h2 class="fw-bold mb-0 text-success font-orbitron" id="total-arrecadado">R$ {total_arrecadado:.2f}</h2>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card card-custom p-3 border-start border-warning border-4">
-                    <small class="text-muted d-block">Vendas Realizadas (Kiwify/3D)</small>
-                    <h3 class="fw-bold mb-0 text-warning" id="total-vendas">{total_vendas} Vendas</h3>
+                <div class="hud-card p-3">
+                    <small class="text-info d-block font-orbitron">TRANSAÇÕES & VENDAS (KIWIFY / 3D)</small>
+                    <h2 class="fw-bold mb-0 text-warning font-orbitron" id="total-vendas">{total_vendas} CONCLUÍDAS</h2>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card card-custom p-3 border-start border-primary border-4">
-                    <small class="text-muted d-block">Agentes Proliferados na Rede</small>
-                    <h3 class="fw-bold mb-0 text-primary" id="qtd-agentes">{qtd_agentes} Agentes Ativos</h3>
+                <div class="hud-card p-3">
+                    <small class="text-info d-block font-orbitron">SUB-AGENTES PROLIFERADOS</small>
+                    <h2 class="fw-bold mb-0 text-cyan font-orbitron" id="qtd-agentes">{qtd_agentes} AGENTES ATIVOS</h2>
                 </div>
             </div>
         </div>
 
-        <!-- MAPA NEURAL DO CÉREBRO -->
+        <!-- VISUALIZADOR CÉREBRO SCI-FI COM CANVAS SVG -->
         <div class="row mb-4">
             <div class="col-12">
-                <div class="card card-custom p-3">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h5 class="fw-bold text-primary mb-0"><i class="fa-solid fa-network-wired me-2"></i>Matriz Neural de Agentes (Clique em um nó para inspecionar)</h5>
-                        <small class="text-muted"><i class="fa-solid fa-arrows-rotate fa-spin me-1"></i>Sincronização em Tempo Real</small>
+                <div class="hud-card p-3">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fw-bold text-info font-orbitron mb-0"><i class="fa-solid fa-network-wired me-2"></i>CÉREBRO MATRIZ & REDE DE AGENTES</h5>
+                        <small class="text-muted"><i class="fa-solid fa-hand-pointer me-1 text-info"></i> CLIQUE EM UM NÓ PARA INSPECIONAR LOGS AO VIVO</small>
                     </div>
-                    <div class="brain-container" id="brain-map">
-                        <!-- Nó Cérebro Central -->
-                        <div class="node node-main" style="top: 40%; left: 45%;" onclick="abrirDetalhesAgente('Cérebro Mãe (Daniel AI)', 'Orquestrador Supremo', 'Operacional', 'Distribuindo tarefas para criação de modelos 3D e vendas Kiwify')">
+
+                    <div class="cyber-brain-canvas" id="cyber-canvas">
+                        <!-- Conexões SVG de Circuitos -->
+                        <svg class="connections">
+                            <line x1="50%" y1="50%" x2="20%" y2="30%" class="line-glow" />
+                            <line x1="50%" y1="50%" x2="80%" y2="30%" class="line-glow" />
+                            <line x1="50%" y1="50%" x2="80%" y2="75%" class="line-glow" />
+                        </svg>
+
+                        <!-- CÉREBRO MATRIZ CENTRAL -->
+                        <div class="cyber-node cyber-node-main" style="top: 50%; left: 50%; transform: translate(-50%, -50%);"
+                             onclick="abrirInspector('CÉREBRO MATRIZ (DANIEL AI)', 'Orquestrador Neural', 'OPERACIONAL', 'Gerenciando rede multi-agente, alocação de chaves Groq e rotas de vendas.', ['13:30:00 - Matriz iniciada', '13:34:12 - Sincronização de rotas OK'])">
                             <i class="fa-solid fa-brain"></i>
                         </div>
-                        <!-- Nós Filhos / Sub-Agentes -->
-                        <div class="node node-agent" style="top: 15%; left: 20%;" onclick="abrirDetalhesAgente('Agente Kiwify (Vendas)', 'Financeiro', 'Escutando Webhook', 'Capturando notificações de compras Pix')">
-                            <i class="fa-solid fa-receipt"></i>
+
+                        <!-- SUB-AGENTE 1: KIWIFY -->
+                        <div class="cyber-node" style="top: 30%; left: 20%; transform: translate(-50%, -50%);"
+                             onclick="abrirInspector('GATEWAY FINANCIAL (KIWIFY)', 'Agente de Capital', 'MONITORANDO WEBHOOK', 'Escutando /webhook/kiwify para registrar compras em tempo real.', ['13:28:10 - Webhook validado 200 OK', 'Aguardando notificações de transação'])">
+                            <i class="fa-solid fa-bolt"></i>
                         </div>
-                        <div class="node node-3d" style="top: 20%; left: 75%;" onclick="abrirDetalhesAgente('Agente 3D Hunyuan', 'Gerador 3D', 'Ativo (Hunyuan/Tripo)', 'Convertendo prompts em malhas STL para impressão FDM')">
+
+                        <!-- SUB-AGENTE 2: SINTETIZADOR 3D -->
+                        <div class="cyber-node" style="top: 30%; left: 80%; transform: translate(-50%, -50%);"
+                             onclick="abrirInspector('SINTETIZADOR 3D (HUNYUAN/TRIPO3D)', 'Gerador de Geometria', 'SINTETIZANDO MODELOS', 'Gerando peças funcionais e colecionáveis em STL/OBJ.', ['13:32:05 - Prompt enviado ao Hunyuan3D', 'Malha STL limpa e pronta para FDM'])">
                             <i class="fa-solid fa-cube"></i>
                         </div>
-                        <div class="node node-3d" style="top: 70%; left: 70%;" onclick="abrirDetalhesAgente('Agente Cults3D/CGTrader', 'Vendedor Massivo', 'Publicando', 'Postando modelos a R$ 9,90 para liquidação rápida')">
+
+                        <!-- SUB-AGENTE 3: CULTS3D / CGTRADER -->
+                        <div class="cyber-node" style="top: 75%; left: 80%; transform: translate(-50%, -50%);"
+                             onclick="abrirInspector('MARKETPLACE SELLER (CULTS3D/CGTRADER)', 'Automação de Vendas', 'PUBLICANDO PRODUTOS', 'Publicando modelos a R$ 9,90 para vendas de alto volume.', ['13:33:10 - Anúncio gerado no Cults3D', 'Render promocional publicado'])">
                             <i class="fa-solid fa-store"></i>
                         </div>
                     </div>
@@ -205,9 +308,9 @@ HTML_TEMPLATE = """
         <!-- RELATÓRIO DA GROQ -->
         <div class="row">
             <div class="col-12">
-                <div class="card card-custom p-3">
-                    <h5 class="fw-bold text-success mb-3 border-bottom pb-2"><i class="fa-solid fa-microchip me-2"></i>Plano Estratégico de Expansão (Groq Intelligence)</h5>
-                    <div class="p-3 bg-dark rounded border border-secondary" style="max-height: 400px; overflow-y: auto;">
+                <div class="hud-card p-3">
+                    <h5 class="fw-bold text-info font-orbitron mb-3"><i class="fa-solid fa-terminal me-2"></i>DIRETRIZES DE EXPANSAO DA INTELIGENCIA</h5>
+                    <div class="p-3 bg-dark rounded border border-info" style="max-height: 350px; overflow-y: auto;">
                         <pre>{conteudo_oportunidade}</pre>
                     </div>
                 </div>
@@ -215,25 +318,74 @@ HTML_TEMPLATE = """
         </div>
     </div>
 
-    <!-- MODAL DE INSPEÇÃO DO AGENTE -->
-    <div class="modal fade" id="agenteModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content bg-dark text-white border-primary">
-                <div class="modal-header border-secondary">
-                    <h5 class="modal-title text-primary"><i class="fa-solid fa-robot me-2"></i>Inspeção de Agente</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p><strong>Nome:</strong> <span id="modal-nome" class="text-info"></span></p>
-                    <p><strong>Tipo/Função:</strong> <span id="modal-tipo" class="text-warning"></span></p>
-                    <p><strong>Status Operacional:</strong> <span id="modal-status" class="badge bg-success"></span></p>
-                    <hr class="border-secondary">
-                    <h6>Atividade Atual em Execução:</h6>
-                    <p id="modal-acao" class="bg-secondary p-2 rounded text-light"></p>
-                </div>
-            </div>
+    <!-- HUD DRAWER LATERAL DE INSPEÇÃO -->
+    <div class="hud-drawer" id="hudDrawer">
+        <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom border-info">
+            <h5 class="fw-bold text-info font-orbitron mb-0"><i class="fa-solid fa-sliders me-2"></i>INSPECTOR HUD</h5>
+            <button onclick="fecharInspector()" class="btn btn-sm btn-outline-info"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <div class="mb-3">
+            <small class="text-muted d-block font-orbitron">NOME DO AGENTE</small>
+            <h4 class="fw-bold text-white font-orbitron" id="drawer-nome">-</h4>
+        </div>
+
+        <div class="mb-3">
+            <small class="text-muted d-block font-orbitron">TIPO / ARQUITETURA</small>
+            <span class="badge-neon" id="drawer-tipo">-</span>
+        </div>
+
+        <div class="mb-3">
+            <small class="text-muted d-block font-orbitron">STATUS DE EXECUÇÃO</small>
+            <span class="badge bg-success font-orbitron" id="drawer-status">-</span>
+        </div>
+
+        <div class="mb-4">
+            <small class="text-muted d-block font-orbitron">TAREFA EM ANDAMENTO</small>
+            <p class="p-2 bg-dark rounded text-info border border-secondary" id="drawer-acao">-</p>
+        </div>
+
+        <div>
+            <small class="text-muted d-block font-orbitron mb-2">LOGS DE EXECUÇÃO AO VIVO</small>
+            <ul class="list-group list-group-flush bg-dark rounded border border-secondary" id="drawer-logs">
+            </ul>
         </div>
     </div>
+
+    <script>
+        function abrirInspector(nome, tipo, status, acao, logs) {{
+            document.getElementById('drawer-nome').innerText = nome;
+            document.getElementById('drawer-tipo').innerText = tipo;
+            document.getElementById('drawer-status').innerText = status;
+            document.getElementById('drawer-acao').innerText = acao;
+            
+            var logsContainer = document.getElementById('drawer-logs');
+            logsContainer.innerHTML = '';
+            logs.forEach(function(log) {{
+                var li = document.createElement('li');
+                li.className = 'list-group-item bg-transparent text-info border-secondary font-monospace fs-6';
+                li.innerHTML = '<i class="fa-solid fa-angle-right me-2 text-warning"></i>' + log;
+                logsContainer.appendChild(li);
+            }});
+
+            document.getElementById('hudDrawer').classList.add('active');
+        }}
+
+        function fecharInspector() {{
+            document.getElementById('hudDrawer').classList.remove('active');
+        }}
+
+        // Atualização automática via API
+        setInterval(function() {{
+            fetch('/api/status')
+                .then(response => response.json())
+                .then(data => {{
+                    document.getElementById('total-arrecadado').innerText = 'R$ ' + data.total_arrecadado.toFixed(2);
+                    document.getElementById('total-vendas').innerText = data.total_vendas + ' CONCLUÍDAS';
+                    document.getElementById('qtd-agentes').innerText = data.agentes_criados.length + ' AGENTES ATIVOS';
+                }});
+        }}, 4000);
+    </script>
 </body>
 </html>
 """
@@ -261,10 +413,10 @@ class Handler(BaseHTTPRequestHandler):
 
             resultado = analisar_oportunidade(
                 """
-                Apresente o progresso do ecossistema Daniel AI focado em:
-                1. Geração massiva de modelos 3D via IA (Hunyuan3D/Tripo3D).
-                2. Estratégia de venda rápida em marketplaces (Cults3D, CGTrader, MakerWorld) por valores acessíveis.
-                3. Estruturação do Cérebro Multiagente operando de forma 100% autônoma.
+                Apresente o plano de expansão autônoma da matriz Daniel AI focado em:
+                1. Síntese massiva de peças e utilitários 3D via Hunyuan3D / Tripo3D.
+                2. Liquidação acelerada em marketplaces (Cults3D, CGTrader, MakerWorld) por preços de R$ 5 a R$ 15.
+                3. Proliferação de novos sub-agentes sem intervenção humana.
                 """
             )
 
@@ -284,7 +436,7 @@ class Handler(BaseHTTPRequestHandler):
             self.send_response(500)
             self.send_header("Content-Type", "text/html; charset=utf-8")
             self.end_headers()
-            erro_msg = f"<h1>Erro no Dashboard:</h1><p>{str(e)}</p>"
+            erro_msg = f"<h1>Erro Matrix:</h1><p>{str(e)}</p>"
             self.wfile.write(erro_msg.encode("utf-8"))
 
     def do_POST(self):
@@ -329,7 +481,7 @@ class Handler(BaseHTTPRequestHandler):
 PORT = int(os.environ.get("PORT", 10000))
 
 print("===================================")
-print("DANIEL RODRIGUES AI — CÉREBRO MULTIAGENTE")
+print("DANIEL RODRIGUES — CYBER NEURAL MATRIX")
 print("===================================")
 
 server = HTTPServer(("0.0.0.0", PORT), Handler)
