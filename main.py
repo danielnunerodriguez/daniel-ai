@@ -41,9 +41,9 @@ def carregar_dados_vendas():
                 "id": "agente-03",
                 "nome": "SUB-AGENTE AUTOR (E-BOOK BUILDER)",
                 "tipo": "Gerador de Conteúdo",
-                "status": "E-BOOK PUBLICADO",
-                "acao": "Guia Definitivo de Impressão 3D + IA compilado e pronto na rota /ebook/download.",
-                "logs": ["Conteúdo estático de alta velocidade compilado", "Download em PDF habilitado"],
+                "status": "E-BOOK AVANÇADO PUBLICADO",
+                "acao": "Manual Técnico Profissional compilado na rota /ebook/download.",
+                "logs": ["Guia prático de depuração, Warping, Desentupimento e IA adicionado", "Download em PDF habilitado"],
                 "icon": "fa-book"
             }
         ]
@@ -56,133 +56,186 @@ def salvar_dados_vendas(dados):
     except Exception as e:
         print(f"Erro ao salvar vendas: {e}")
 
-# CONTEÚDO COMPLETO DO E-BOOK FORMATADO
+# CONTEÚDO COMPLETO E PROFUNDO DO E-BOOK
 EBOOK_HTML = """
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GUIA DEFINITIVO: IMPRESSÃO 3D + INTELIGÊNCIA ARTIFICIAL</title>
+    <title>MANUAL TÉCNICO: IMPRESSÃO 3D + INTELIGÊNCIA ARTIFICIAL</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; line-height: 1.7; }
-        .ebook-container { max-width: 850px; margin: 40px auto; background: #ffffff; padding: 50px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); border: 1px solid #e2e8f0; }
-        .hero-banner { background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: #ffffff; padding: 40px; border-radius: 12px; margin-bottom: 40px; }
-        h1 { font-weight: 800; font-size: 2.2rem; }
-        h2 { font-weight: 700; color: #0284c7; margin-top: 35px; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; }
-        h3 { font-weight: 600; color: #334155; margin-top: 20px; }
-        .highlight-box { background-color: #f0f9ff; border-left: 4px solid #0284c7; padding: 20px; border-radius: 8px; margin: 25px 0; }
-        .btn-download { background-color: #10b981; color: white; font-weight: 700; padding: 14px 28px; border-radius: 8px; text-decoration: none; border: none; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #e2e8f0; line-height: 1.8; }
+        .ebook-container { max-width: 900px; margin: 40px auto; background: #1e293b; padding: 50px; border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); border: 1px solid #334155; }
+        .hero-banner { background: linear-gradient(135deg, #0284c7 0%, #0f766e 100%); color: #ffffff; padding: 45px; border-radius: 12px; margin-bottom: 40px; border: 1px solid #38bdf8; }
+        h1 { font-weight: 800; font-size: 2.3rem; letter-spacing: -0.5px; }
+        h2 { font-weight: 700; color: #38bdf8; margin-top: 40px; border-bottom: 2px solid #334155; padding-bottom: 10px; }
+        h3 { font-weight: 600; color: #f1f5f9; margin-top: 25px; }
+        .highlight-box { background-color: rgba(14, 165, 233, 0.1); border-left: 4px solid #38bdf8; padding: 20px; border-radius: 8px; margin: 25px 0; border: 1px solid rgba(56, 189, 248, 0.2); }
+        .alert-box { background-color: rgba(239, 68, 68, 0.1); border-left: 4px solid #ef4444; padding: 20px; border-radius: 8px; margin: 25px 0; border: 1px solid rgba(239, 68, 68, 0.2); }
+        .code-block { background-color: #090d16; font-family: 'JetBrains Mono', monospace; color: #38bdf8; padding: 15px; border-radius: 8px; border: 1px solid #1e293b; font-size: 0.9rem; }
+        .btn-download { background-color: #10b981; color: white; font-weight: 700; padding: 14px 28px; border-radius: 8px; text-decoration: none; border: none; font-size: 1.1rem; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4); }
         .btn-download:hover { background-color: #059669; color: white; }
+        .tech-table { border-color: #334155; color: #cbd5e1; }
+        .tech-table th { background-color: #0f172a; color: #38bdf8; }
         @media print {
             .no-print { display: none !important; }
-            .ebook-container { box-shadow: none; border: none; padding: 0; margin: 0; }
+            body { background-color: #ffffff; color: #000000; }
+            .ebook-container { background: #ffffff; color: #000000; box-shadow: none; border: none; padding: 0; margin: 0; }
+            h2 { color: #0284c7; border-color: #ccc; }
+            .highlight-box { background: #f0f9ff; border-left-color: #0284c7; color: #000; }
+            .code-block { background: #f8fafc; color: #0284c7; border-color: #ccc; }
         }
     </style>
 </head>
 <body>
     <div class="text-center my-4 no-print">
-        <button onclick="window.print()" class="btn-download"><i class="fa-solid fa-file-pdf me-2"></i> Baixar / Imprimir em PDF</button>
+        <button onclick="window.print()" class="btn-download"><i class="fa-solid fa-file-pdf me-2"></i> Baixar / Imprimir Manual em PDF</button>
     </div>
 
     <div class="ebook-container">
-        <!-- CAPA / HERO -->
+        <!-- CAPA -->
         <div class="hero-banner text-center">
-            <span class="badge bg-light text-primary mb-2 font-monospace">EDICAO OFICIAL // DANIEL AI MATRIX</span>
-            <h1>GUIA DEFINITIVO: IMPRESSÃO 3D + INTELIGÊNCIA ARTIFICIAL</h1>
-            <p class="lead mb-0">Como Criar, Otimizar e Lucrar Vendendo Peças e Modelos do Zero com IAs Generativas</p>
+            <span class="badge bg-dark text-info mb-2 font-monospace border border-info">MANUAL DE ENGENHARIA DE IMPRESSÃO 3D + IA</span>
+            <h1>GUIA DEFINITIVO: MODELAGEM, TROUBLESHOOTING E MONETIZAÇÃO COM IA</h1>
+            <p class="lead mb-0 text-light">Soluções para Falhas de Impressão, Criação 2D-para-3D e Calibração por Visão Computacional</p>
         </div>
 
-        <div class="mb-4">
-            <p><strong>Autor:</strong> Daniel Rodrigues & Daniel AI Matrix</p>
-            <p><strong>Formato:</strong> Manual Prático de Implementação e Monetização</p>
+        <div class="d-flex justify-content-between text-muted mb-4 fs-6">
+            <span><strong>Autor:</strong> Daniel Rodrigues & Daniel AI Matrix</span>
+            <span><strong>Versão:</strong> 2.0 (Avançado)</span>
         </div>
 
-        <hr>
+        <hr class="border-secondary">
 
-        <!-- CAPÍTULO 1 -->
-        <h2>Capítulo 1: A Revolução da IA Generativa na Impressão 3D</h2>
-        <p>A impressão 3D tradicional sempre enfrentou um gargalo crítico: a dependência de softwares CAD complexos e o tempo exigido para modelagem do zero. Ferramentas como Blender, ZBrush ou Fusion 360 demandam centenas de horas de estudo até que o designer consiga produzir malhas funcionais.</p>
-        <p>A Inteligência Artificial Generativa elimina essa barreira. Com o surgimento de algoritmos de <strong>Text-to-3D</strong> e <strong>Image-to-3D</strong>, tornou-se possível converter prompts em linguagem natural ou fotos de referência em malhas tridimensionais (STL, OBJ, GLB) prontas para fatiamento em questão de minutos.</p>
+        <!-- MÓDULO 1 -->
+        <h2>Módulo 1: O Fluxo Integrado de Criação (Imagem 2D ➔ Modelo 3D via IA)</h2>
+        <p>Criar arquivos 3D a partir do zero não exige mais domínio complexo de CAD. O fluxo moderno utiliza IAs geradoras de imagem para definir o conceito e plataformas 3D por IA para sintetizar a geometria tridimensional pronta para impressão.</p>
 
-        <div class="highlight-box">
-            <h5>💡 As Principais Ferramentas do Mercado Atual:</h5>
-            <ul>
-                <li><strong>Hunyuan3D (Tencent):</strong> Excelente para geração rápida de formas orgânicas e estruturas volumétricas a partir de imagens.</li>
-                <li><strong>Tripo3D:</strong> Alta velocidade na conversão de textos em modelos 3D com malhas limpas e topologia simplificada.</li>
-                <li><strong>Meshy.ai:</strong> Especializada em texturização e geração de colecionáveis detalhados.</li>
-            </ul>
-        </div>
-
-        <!-- CAPÍTULO 2 -->
-        <h2>Capítulo 2: Do Texto/Imagem ao Arquivo STL Impresso</h2>
-        <p>Para obter peças com alta qualidade de impressão FDM ou Resina, siga o fluxo de trabalho recomendado:</p>
-
-        <h3>1. Engenharia de Prompts para Modelagem 3D</h3>
-        <p>Evite descrições genéricas. Quanto mais especificações geométricas você fornecer, melhor será a geometria gerada:</p>
+        <h3>Etapa 1: Gerando a Imagem de Referência Otimizada (2D)</h3>
+        <p>Para obter modelos 3D limpos em IAs como <strong>Hunyuan3D, Tripo3D ou Meshy</strong>, a imagem de origem deve seguir parâmetros rígidos:</p>
         <ul>
-            <li>❌ <em>Prompt Fraco:</em> "Um vaso de planta"</li>
-            <li>✅ <em>Prompt Eficiente:</em> "A minimalist geometric parametric vase for 3D printing, flat stable base, watertight manifold mesh, clean topology, smooth surfaces, no overhangs, high resolution STL"</li>
+            <li>Fundo neutro e isolado (de preferência branco ou transparente).</li>
+            <li>Iluminação homogênea sem sombras duras que possam confundir a profundidade.</li>
+            <li>Vista em perspectiva isométrica ou visão frontal plana.</li>
         </ul>
 
-        <h3>2. Validação da Malha (Geometria Estanque / Manifold)</h3>
-        <p>Modelos gerados por IA podem conter falhas como normais invertidas ou furos na malha. Antes de enviar para o fatiador (Creality Print, Cura, PrusaSlicer ou Bambu Studio):</p>
+        <div class="code-block my-3">
+            <strong>Prompt Exemplo (Midjourney / DALL-E 3 / Leonardo AI):</strong><br>
+            "A clean 3D isometric concept of a mechanical cable organizer gear, studio lighting, isolated on solid white background, high contrast, clean vector style, orthographic view --no shadows"
+        </div>
+
+        <h3>Etapa 2: Importação e Conversão no Gerador 3D</h3>
         <ol>
-            <li>Importe o arquivo no software gratuito <strong>Autodesk Netfabb</strong> ou use o reparo automático do <strong>3D Builder (Windows)</strong>.</li>
-            <li>Garanta que a peça seja <em>Watertight</em> (completamente fechada, sem buracos internos).</li>
-            <li>Ajuste a orientação na mesa para minimizar a necessidade de suportes.</li>
+            <li>Acesse a plataforma de IA 3D de sua preferência (ex: <strong>Hunyuan3D / Tripo3D</strong>).</li>
+            <li>Faça o upload da imagem 2D gerada na etapa anterior no módulo <em>Image-to-3D</em>.</li>
+            <li>Ajuste a densidade do polígono (Polycount) para nível Médio/Alto para preservar os detalhes funcionais.</li>
+            <li>Exporte o arquivo resultante no formato <strong>.STL</strong> ou <strong>.OBJ</strong>.</li>
         </ol>
 
-        <!-- CAPÍTULO 3 -->
-        <h2>Capítulo 3: Configurações Ideais para Fatiamento FDM e Resina</h2>
-        <table class="table table-bordered my-3">
-            <thead class="table-dark">
+        <!-- MÓDULO 2 -->
+        <h2>Módulo 2: Resolução de Falhas Críticas de Impressão (Troubleshooting)</h2>
+        <p>Mesmo com uma boa modelagem, falhas físicas na impressora 3D podem inutilizar a peça. Abaixo estão os procedimentos exatos para diagnosticar e corrigir as duas principais falhas de oficinas 3D.</p>
+
+        <h3>1. Como Diagnosticar e Corrigir o WARPING (Descolamento das Bordas)</h3>
+        <p>O <em>Warping</em> ocorre quando o plástico esfria de forma desigual, encolhe e puxa as extremidades da peça para cima, soltando-a da mesa de impressão.</p>
+
+        <div class="alert-box">
+            <h5 class="text-danger fw-bold"><i class="fa-solid fa-triangle-exclamation me-2"></i>Passos Obrigatórios para Eliminar o Warping:</h5>
+            <ol class="mb-0">
+                <li><strong>Calibração do Z-Offset (Primeira Camada):</strong> Garanta que o bico esteja levemente esmagando o filamento sobre a mesa. Se o fio de plástico ficar redondo em vez de achatado, o Z-Offset está muito alto.</li>
+                <li><strong>Temperatura Correta da Mesa (Bed Temp):</strong>
+                    <ul>
+                        <li><strong>PLA:</strong> 55°C a 65°C</li>
+                        <li><strong>PETG:</strong> 70°C a 85°C</li>
+                        <li><strong>ABS/TRITAN:</strong> 100°C a 110°C (Exige impressora fechada/enclosure).</li>
+                    </ul>
+                </li>
+                <li><strong>Uso de Aditivos de Adesão:</strong> Aplique cola bastão (PVP) ou spray de fixação próprio para impressão 3D na mesa limpa com álcool isopropílico (IPA 99%).</li>
+                <li><strong>Adição de Brim no Fatiador:</strong> Ative a borda de adesão (<em>Brim</em>) com largura de 5mm a 10mm no fatiador para aumentar a área de contato com a mesa.</li>
+                <li><strong>Correntes de Ar:</strong> Desligue ventiladores de ambiente próximos à impressora e desative o cooler de peça nas primeiras 3 camadas.</li>
+            </ol>
+        </div>
+
+        <h3>2. Como Resolver Bico Entupido (Nozzle Clog) e Sub-extrusão</h3>
+        <p>O entupimento pode ocorrer por acúmulo de resíduos, filamento de má qualidade ou retenção de calor acima do gargalo (<em>Heat Creep</em>).</p>
+
+        <div class="highlight-box">
+            <h5 class="text-info fw-bold"><i class="fa-solid fa-wrench me-2"></i>Técnica Eficiente: Puxada a Frio (Cold Pull / Atomic Pull)</h5>
+            <p>Este método remove resíduos carbonizados de dentro do Bico/Hotend sem precisar desmontar o conjunto:</p>
+
+            <ol>
+                <li>Aqueça o hotend até a temperatura de fusão do filamento atual (ex: 210°C para PLA ou 240°C para PETG).</li>
+                <li>Empurre manualmente um pedaço de filamento (preferencialmente Nylon ou PLA claro) até sair um pouco pelo bico.</li>
+                <li>Desligue o aquecimento e deixe o hotend esfriar até cerca de <strong>90°C (para PLA)</strong> ou <strong>130°C (para Nylon)</strong>.</li>
+                <li>Com o plástico no estado semi-sólido, puxe o filamento firmemente para cima.</li>
+                <li>O filamento sairá com o exato formato interno do bico, trazendo toda a sujeira incrustada. Repita até a ponta sair limpa.</li>
+            </ol>
+            <p class="mb-0"><strong>Dica extra:</strong> Use uma micro-agulha de 0.4mm aquecida inserida por baixo do bico para desobstruir partículas maiores antes do Cold Pull.</p>
+        </div>
+
+        <!-- MÓDULO 3 -->
+        <h2>Módulo 3: Utilizando Inteligência Artificial para Maximizar a Qualidade</h2>
+        <p>Você pode transformar modelos de IA avançados (como o ChatGPT Plus / Groq Vision) em um **Engenheiro de Fatiamento Pessoal** para ajustar os parâmetros da sua impressora.</p>
+
+        <h3>Diagnóstico por Imagem e Visão Computacional</h3>
+        <p>Ao se deparar com uma falha visual na peça impresso (ex: teias de aranha / *stringing*, linhas desalinhadas ou falta de preenchimento):</p>
+        <ol>
+            <li>Tire uma foto bem iluminada e aproximada (Macro) do defeito da peça.</li>
+            <li>Envie a foto para a IA acompanhada do prompt de diagnóstico técnico.</li>
+        </ol>
+
+        <div class="code-block my-3">
+            <strong>Prompt Mestre para Diagnóstico de Impressão 3D:</strong><br>
+            "Atue como um Engenheiro Especialista em Impressão 3D e Fatiamento FDM. Analise esta foto da minha impressão. Identifique se o defeito é Stringing, Overheating, Ghosting ou Under-extrusion. Indique os 3 parâmetros exatos do fatiador (Cura/PrusaSlicer/Bambu) que devo alterar (ex: Distância de Retração, Velocidade, Fluxo ou Temperatura) para solucionar o problema."
+        </div>
+
+        <!-- MÓDULO 4 -->
+        <h2>Módulo 4: Tabela de Referência Rápida de Parâmetros</h2>
+        <table class="table table-bordered tech-table my-3">
+            <thead>
                 <tr>
-                    <th>Parâmetro</th>
-                    <th>Impressão FDM (Filamento)</th>
-                    <th>Impressão SLA (Resina)</th>
+                    <th>Sintoma Visual</th>
+                    <th>Causa Provável</th>
+                    <th>Ação Corretiva no Fatiador / Hardware</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td><strong>Altura de Camada</strong></td>
-                    <td>0.16mm - 0.20mm (Peças Funcionais)</td>
-                    <td>0.03mm - 0.05mm (Alta Precisão)</td>
+                    <td><strong>Bordas soltando da mesa</strong></td>
+                    <td>Falta de adesão / Resfriamento rápido</td>
+                    <td>Aumentar mesa em +5°C, usar Brim 8mm, aplicar cola PVP.</td>
                 </tr>
                 <tr>
-                    <td><strong>Paredes / Perímetros</strong></td>
-                    <td>3 a 4 linhas (Para maior resistência)</td>
-                    <td>Espessura de casca de 2.0mm</td>
+                    <td><strong>Teias de aranha (Stringing)</strong></td>
+                    <td>Retração insuficiente ou Bico muito quente</td>
+                    <td>Aumentar distância de retração ( DirectDrive: 0.8-1.5mm | Bowden: 4-6mm ) e baixar temp em 5°C.</td>
                 </tr>
                 <tr>
-                    <td><strong>Preenchimento (Infill)</strong></td>
-                    <td>15% a 25% (Gyroid ou Grid)</td>
-                    <td>Esvaziado (Hollow) + Furos de Drenagem</td>
+                    <td><strong>Falhas no meio das camadas</strong></td>
+                    <td>Sub-extrusão ou Bico parcialmente entupido</td>
+                    <td>Executar Cold Pull, calibrar os E-Steps do Extrusor e checar vazamento no gargalo.</td>
+                </tr>
+                <tr>
+                    <td><strong>Camadas desalinhadas (Layer Shift)</strong></td>
+                    <td>Correias frouxas ou motor superaquecido</td>
+                    <td>Esticar correias dos eixos X/Y e checar tensão V-Ref dos drivers na placa.</td>
                 </tr>
             </tbody>
         </table>
 
-        <!-- CAPÍTULO 4 -->
-        <h2>Capítulo 4: Estratégias de Monetização e Venda Rápida</h2>
-        <p>Existem dois caminhos principais para faturar com esse modelo de negócio:</p>
-
-        <h3>Estratégia A: Venda de Arquivos Digitais (Lucro Passivo Escalonável)</h3>
-        <p>Publique os arquivos STL/OBJ em marketplaces especializados como <strong>Cults3D, CGTrader, MakerWorld e Printables</strong>. A chave é precificar entre <strong>R$ 5,00 e R$ 15,00 (US$ 1,00 a US$ 3,00)</strong> para gerar um alto volume de vendas impulsivas por compradores globais.</p>
-
-        <h3>Estratégia B: Infoprodutos e Packs Exclusivos na Kiwify</h3>
-        <p>Empacote coleções de modelos organizados por nichos específicos (ex: *Pack Utilitários de Oficina*, *Pack Vasos Decorativos*, *Pack Suportes para Setup Gaming*) e venda o acesso ao Drive com o checkout da Kiwify.</p>
-
-        <div class="highlight-box bg-light border-success">
-            <h5 class="text-success">🚀 Resumo da Operação Autônoma:</h5>
-            <p class="mb-0">A IA cria o conteúdo e os arquivos digitais ➔ A Kiwify processa o pagamento via Pix/Cartão ➔ O cliente recebe o acesso imediato via Webhook ➔ Você acumula receita 100% no piloto automático.</p>
+        <!-- CONCLUSÃO -->
+        <div class="highlight-box border-success text-light mt-5">
+            <h5 class="text-success fw-bold"><i class="fa-solid fa-circle-check me-2"></i>Conclusão do Manual:</h5>
+            <p class="mb-0">Integrar o diagnóstico por IA com o domínio do troubleshooting físico transforma seu estúdio de impressão 3D em uma operação de alta eficiência, reduzindo o desperdício de filamento a zero e garantindo peças com padrão profissional prontas para venda imediata.</p>
         </div>
 
-        <div class="text-center mt-5">
-            <p class="text-muted mb-1">DANIEL AI MATRIX — SISTEMA AUTÔNOMO DE GERAÇÃO DE RENDA</p>
-            <small class="text-secondary">© Todos os direitos reservados.</small>
+        <div class="text-center mt-5 text-muted">
+            <p class="mb-1">DANIEL AI MATRIX — SISTEMA AUTÔNOMO DE GERAÇÃO E ENTREGA DE CONTEÚDO</p>
+            <small>© Todos os direitos reservados. Daniel Rodrigues.</small>
         </div>
     </div>
 </body>
@@ -200,37 +253,37 @@ HTML_DASHBOARD = """
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@500;600;700&display=swap');
-        body {
+        body {{
             background-color: #030712; color: #38bdf8; font-family: 'Rajdhani', sans-serif;
             background-image: radial-gradient(rgba(14, 165, 233, 0.15) 1px, transparent 0), radial-gradient(rgba(14, 165, 233, 0.1) 1px, #030712 100%);
             background-size: 24px 24px, 100% 100%; overflow-x: hidden;
-        }
-        .hud-card {
+        }}
+        .hud-card {{
             background: rgba(15, 23, 42, 0.85); border: 1px solid #0284c7;
             box-shadow: 0 0 15px rgba(2, 132, 199, 0.25); border-radius: 8px; backdrop-filter: blur(8px);
-        }
-        .cyber-brain-canvas {
+        }}
+        .cyber-brain-canvas {{
             position: relative; width: 100%; height: 380px;
             background: radial-gradient(circle, rgba(14,165,233,0.12) 0%, rgba(3,7,18,0.95) 80%);
             border: 1px solid #0284c7; border-radius: 12px; overflow: hidden;
-        }
-        .cyber-node {
+        }}
+        .cyber-node {{
             position: absolute; width: 70px; height: 70px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center; font-size: 1.6rem;
             color: #00f0ff; cursor: pointer; z-index: 5; transition: all 0.3s;
             background: rgba(15, 23, 42, 0.9); border: 2px solid #00f0ff; box-shadow: 0 0 15px #00f0ff;
-        }
-        .cyber-node-main { width: 90px; height: 90px; font-size: 2.2rem; color: #ff007f; border-color: #ff007f; box-shadow: 0 0 25px #ff007f; }
-        .hud-drawer {
+        }}
+        .cyber-node-main {{ width: 90px; height: 90px; font-size: 2.2rem; color: #ff007f; border-color: #ff007f; box-shadow: 0 0 25px #ff007f; }}
+        .hud-drawer {{
             position: fixed; top: 0; right: -420px; width: 400px; height: 100vh;
             background: rgba(3, 7, 18, 0.95); border-left: 2px solid #00f0ff;
             box-shadow: -10px 0 30px rgba(0, 240, 255, 0.3); z-index: 9999;
             transition: right 0.4s; padding: 25px; overflow-y: auto;
-        }
-        .hud-drawer.active { right: 0; }
-        .badge-neon { background: rgba(0, 240, 255, 0.1); color: #00f0ff; border: 1px solid #00f0ff; padding: 4px 10px; border-radius: 4px; }
-        svg.connections { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
-        .line-glow { stroke: #00f0ff; stroke-width: 2; stroke-dasharray: 6 4; }
+        }}
+        .hud-drawer.active {{ right: 0; }}
+        .badge-neon {{ background: rgba(0, 240, 255, 0.1); color: #00f0ff; border: 1px solid #00f0ff; padding: 4px 10px; border-radius: 4px; }}
+        svg.connections {{ position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }}
+        .line-glow {{ stroke: #00f0ff; stroke-width: 2; stroke-dasharray: 6 4; }}
     </style>
 </head>
 <body class="py-4">
@@ -242,7 +295,7 @@ HTML_DASHBOARD = """
             </div>
             <div>
                 <span class="badge-neon me-2"><i class="fa-solid fa-circle-dot me-1 text-success"></i> MATRIZ NEURAL ONLINE</span>
-                <a href="/ebook/download" target="_blank" class="btn btn-sm btn-success fw-bold"><i class="fa-solid fa-book me-1"></i> Ver E-book Gerado</a>
+                <a href="/ebook/download" target="_blank" class="btn btn-sm btn-success fw-bold"><i class="fa-solid fa-book me-1"></i> Ver Manual Avançado</a>
             </div>
         </div>
 
@@ -282,7 +335,7 @@ HTML_DASHBOARD = """
                         </svg>
 
                         <div class="cyber-node cyber-node-main" style="top: 50%; left: 50%; transform: translate(-50%, -50%);"
-                             onclick="abrirInspector('CÉREBRO MATRIZ (DANIEL AI)', 'Orquestrador Neural', 'OPERACIONAL', 'Coordenando fluxo de vendas Kiwify e disponibilização do e-book.', ['Matriz iniciada', 'E-book em /ebook/download'])">
+                             onclick="abrirInspector('CÉREBRO MATRIZ (DANIEL AI)', 'Orquestrador Neural', 'OPERACIONAL', 'Coordenando fluxo de vendas Kiwify e entrega do manual técnico.', ['Matriz iniciada', 'Manual técnico atualizado em /ebook/download'])">
                             <i class="fa-solid fa-brain"></i>
                         </div>
 
@@ -292,7 +345,7 @@ HTML_DASHBOARD = """
                         </div>
 
                         <div class="cyber-node" style="top: 30%; left: 80%; transform: translate(-50%, -50%);"
-                             onclick="abrirInspector('SUB-AGENTE AUTOR (E-BOOK)', 'Gerador de Conteúdo', 'PUBLICADO', 'E-book de Impressão 3D + IA ativo na rota /ebook/download.', ['Conteúdo estático de alta velocidade compilado', 'Ativo para os clientes'])">
+                             onclick="abrirInspector('SUB-AGENTE AUTOR (E-BOOK)', 'Gerador de Conteúdo', 'MANUAL TÉCNICO V2.0 ATIVO', 'Guia avançado de Impressão 3D + IA ativo na rota /ebook/download.', ['Cold Pull, Warping e Visão Computacional compilados', 'Ativo para clientes'])">
                             <i class="fa-solid fa-book"></i>
                         </div>
                     </div>
@@ -325,16 +378,16 @@ HTML_DASHBOARD = """
     </div>
 
     <script>
-        function abrirInspector(nome, tipo, status, acao, logs) {
+        function abrirInspector(nome, tipo, status, acao, logs) {{
             document.getElementById('drawer-nome').innerText = nome;
             document.getElementById('drawer-tipo').innerText = tipo;
             document.getElementById('drawer-status').innerText = status;
             document.getElementById('drawer-acao').innerText = acao;
             document.getElementById('hudDrawer').classList.add('active');
-        }
-        function fecharInspector() {
+        }}
+        function fecharInspector() {{
             document.getElementById('hudDrawer').classList.remove('active');
-        }
+        }}
     </script>
 </body>
 </html>
@@ -343,7 +396,6 @@ HTML_DASHBOARD = """
 class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
-        # ROTA DO E-BOOK COMPLETO FORMATADO
         if self.path == "/ebook/download":
             self.send_response(200)
             self.send_header("Content-Type", "text/html; charset=utf-8")
