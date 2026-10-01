@@ -1,7 +1,7 @@
 import os
-from openai import OpenAI
+from groq import Groq
 
-client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+client = Groq(api_key=os.environ.get("OPENAI_API_KEY"))
 
 OPPORTUNITY_SYSTEM = """
 Você é o Agente de Oportunidades do Daniel AI.
@@ -50,7 +50,7 @@ Nunca utilize fraude, invasão, manipulação, falsificação ou qualquer ativid
 def analisar_oportunidade(missao):
 
     resposta = client.responses.create(
-        model="gpt-5.6-luna",
+        model="llama-3.3-70b-versatile",
         instructions=OPPORTUNITY_SYSTEM,
         input=missao
     )
