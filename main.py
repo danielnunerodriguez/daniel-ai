@@ -39,7 +39,7 @@ Regras:
 
 def pensar(missao):
     resposta = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
+        model="llama-3.1-8b-instant",  # <--- Alterado aqui
         messages=[
             {"role": "system", "content": SYSTEM},
             {"role": "user", "content": missao}
