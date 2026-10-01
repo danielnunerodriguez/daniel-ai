@@ -25,7 +25,7 @@ Você é o AGENTE PRINCIPAL. Outros agentes serão criados conforme a necessidad
 
 def perguntar(texto):
     resposta = client.responses.create(
-        model="gpt-5.6-mini",
+        model="gpt-5.6-luna",
         instructions=SYSTEM,
         input=texto
     )
